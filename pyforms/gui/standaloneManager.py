@@ -26,34 +26,34 @@ else:
 	from PyQt4.QtGui import QApplication
 	from PyQt4 import QtCore
 
-from pyforms.gui.BaseWidget import BaseWidget
 from pyforms.gui.Controls.ControlDockWidget import ControlDockWidget
 
 logger = logging.getLogger(__name__)
 
 
 class StandAloneContainer(QMainWindow):
-	def __init__(self, app_instance):
+	def __init__(self, ClassObject):
 		super(QMainWindow, self).__init__()
 
-		app_instance.app_main_window = self
-		self._widget = app_instance
+		w = ClassObject()
+		w.app_main_window = self
+		self._widget = w
 
-		if len(app_instance.mainmenu) > 0:
-			app_instance._mainmenu = self.__initMainMenu(app_instance.mainmenu)
+		if len(w.mainmenu) > 0:
+			w._mainmenu = self.__initMainMenu(w.mainmenu)
 
-		app_instance.init_form()
+		w.init_form()
 
 		if conf.PYFORMS_USE_QT5:
 			self.layout().setContentsMargins(conf.PYFORMS_MAINWINDOW_MARGIN,conf.PYFORMS_MAINWINDOW_MARGIN,conf.PYFORMS_MAINWINDOW_MARGIN,conf.PYFORMS_MAINWINDOW_MARGIN)
 		else:
 			self.layout().setMargin(conf.PYFORMS_MAINWINDOW_MARGIN)
 
-		self.setCentralWidget(app_instance)
-		self.setWindowTitle(app_instance.title)
+		self.setCentralWidget(w)
+		self.setWindowTitle(w.title)
 
 		docks = {}
-		for name, item in app_instance.controls.items():
+		for name, item in w.controls.items():
 			if isinstance(item, ControlDockWidget):
 				if item.side not in docks:
 					docks[item.side] = []
@@ -176,30 +176,23 @@ def execute_test_file(myapp):
 		exec(code, global_vars, local_vars)
 
 
-def start_app(*args, **kwargs):
+def start_app(ClassObject, geometry=None):
 	from pysettings import conf
-
-	AppClass = args[0]
 
 	app = QApplication(sys.argv)
 
 	conf += 'pyforms.gui.settings'
 
-	
-	app_def = AppClass(**kwargs.get('app_args', {}))
-
-
-	mainwindow = StandAloneContainer(app_def)
+	mainwindow = StandAloneContainer(ClassObject)
 
 	myapp = mainwindow.centralWidget()
-
-	geometry = kwargs.get('geometry', None)
 
 	if geometry is not None:
 		mainwindow.show()
 		mainwindow.setGeometry(*geometry)
 	else:
-		mainwindow.showMaximized()
+		#mainwindow.showMaximized()
+		mainwindow.showNormal()
 
 	if conf.PYFORMS_QUALITY_TESTS_PATH is not None:
 		import argparse

@@ -78,6 +78,8 @@ class ControlPlayer(ControlBase, QFrame):
 		
 		self.videoPlay.setIcon(conf.PYFORMS_ICON_VIDEOPLAYER_PAUSE_PLAY)
 
+		
+		
 		self._videoWidget = VideoGLWidget()
 		self._videoWidget._control = self
 		self.videoLayout.addWidget(self._videoWidget)

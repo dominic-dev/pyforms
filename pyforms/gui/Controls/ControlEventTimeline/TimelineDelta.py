@@ -26,9 +26,9 @@ class DeltaEditWindow(BaseWidget):
 		else:
 			self.layout().setMargin(5)
 
-		self._label = ControlText('Label', 	 default=label)
-		self._begin = ControlNumber('Begin', default=begin, minimum=0, maximum=100000000000000)
-		self._end 	= ControlNumber('End',   default=end, 	minimum=0, maximum=100000000000000)
+		self._label = ControlText('Label', label)
+		self._begin = ControlNumber('Begin', begin, 0, 100000000000000)
+		self._end 	= ControlNumber('End', end, 0, 100000000000000)
 
 		self._applybtn = ControlButton('Apply')
 
@@ -42,16 +42,12 @@ class DeltaEditWindow(BaseWidget):
 		self._end.changed_event   = self.__end_changed_event
 
 	def __begin_changed_event(self):
-		if not hasattr(self, '_updating') and self._begin.value>=self._end.value:
-			self._updating = True
+		if self._begin.value>=self._end.value:
 			self._begin.value = self._end.value-1
-			del self._updating
 
 	def __end_changed_event(self):
-		if not hasattr(self, '_updating') and self._end.value<=self._begin.value:
-			self._updating = True
+		if self._end.value<=self._begin.value:
 			self._end.value = self._begin.value+1
-			del self._updating
 
 
 	@property
@@ -113,7 +109,7 @@ class TimelineDelta(object):
 		"""
 		if self.track >= (self._parent.numberoftracks - 1):
 			for i in range(self._parent.numberoftracks - 1, self.track + 1):
-				self._parent.add_track()
+				self._parent.addTrack()
 
 	def collide(self, x, y):
 		"""
@@ -329,7 +325,7 @@ class TimelineDelta(object):
 
 		# Verify if the new track exists. In case not create it
 		self._top = Track.whichTop(value)
-		if self.track >= len(self._parent._tracks): self._parent.add_track()
+		if self.track >= len(self._parent._tracks): self._parent.addTrack()
 
 		# if do not exists in the track add it
 		if self not in self._parent._tracks[self.track].periods: self._parent._tracks[self.track].periods.append(self)

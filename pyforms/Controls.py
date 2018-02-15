@@ -16,6 +16,7 @@ if conf.PYFORMS_MODE in ['GUI', 'GUI-OPENCSP']:
 	from pyforms.gui.Controls.ControlDockWidget import ControlDockWidget
 	from pyforms.gui.Controls.ControlEmptyWidget import ControlEmptyWidget
 	from pyforms.gui.Controls.ControlFile import ControlFile
+	from pyforms.gui.Controls.ControlSaveFile import ControlSaveFile
 	from pyforms.gui.Controls.ControlFilesTree import ControlFilesTree
 	from pyforms.gui.Controls.ControlLabel import ControlLabel
 	from pyforms.gui.Controls.ControlList import ControlList
@@ -81,17 +82,9 @@ elif conf.PYFORMS_MODE in ['TERMINAL']:
 	from pyforms.terminal.Controls.ControlDir import ControlDir
 	from pyforms.terminal.Controls.ControlImage import ControlImage
 	from pyforms.terminal.Controls.ControlSlider import ControlSlider
-	from pyforms.terminal.Controls.ControlList import ControlList
 	from pyforms.terminal.Controls.ControlPlayer import ControlPlayer
 	from pyforms.terminal.Controls.ControlNumber import ControlNumber
 	from pyforms.terminal.Controls.ControlProgress import ControlProgress
-	from pyforms.terminal.Controls.ControlToolBox import ControlToolBox
-	from pyforms.terminal.Controls.ControlCheckBoxList import ControlCheckBoxList
-	from pyforms.terminal.Controls.ControlEmptyWidget import ControlEmptyWidget
-	from pyforms.terminal.Controls.ControlTree import ControlTree
-	from pyforms.terminal.Controls.ControlBoundingSlider import ControlBoundingSlider
-	from pyforms.terminal.Controls.ControlLabel import ControlLabel
-	from pyforms.terminal.Controls.ControlTextArea import ControlTextArea
 
 elif conf.PYFORMS_MODE in ['WEB']:
 

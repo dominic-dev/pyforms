@@ -7,24 +7,21 @@ class ControlBase(object):
     _label          = None
     _controlHTML    = ""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, label = "", defaultValue = "", helptext=None):
         self._id = uuid.uuid4()
-        self._value = kwargs.get('default', None)
+        self._value = defaultValue
         self._parent = 1
-        self._label = kwargs.get('label', args[0] if len(args)>0 else '')
+        self._label = label
 
     def init_form(self): pass
 
     def load_form(self, data, path=None):
-        oldvalue = self.value
-        self.value = data.get('value', None)
-        if oldvalue!=self.value: self.changed_event()
+        if 'value' in data: self.value = data['value']
 
-    def changed_event(self):
-        """
-        Function called when ever the Control value is changed
-        """
-        return True
+    def save_form(self, data, path=None):
+        if self.value: data['value'] = self.value
+
+    def value_updated(self, value): pass
 
     def show(self):pass
 
@@ -58,7 +55,7 @@ class ControlBase(object):
     def value(self, value):
         oldvalue = self._value
         self._value = value
-        if oldvalue!=value: self.changed_event()
+        if oldvalue!=value: self.value_updated(value)
 
     ############################################################################
 
@@ -83,4 +80,27 @@ class ControlBase(object):
 
 
 
-    
+    @property
+    def maxWidth(self): return -1
+
+    @maxWidth.setter
+    def maxWidth(self, value): pass
+
+    @property
+    def minWidth(self): return -1
+
+    @minWidth.setter
+    def minWidth(self, value): pass
+
+
+    @property
+    def maxHeight(self): return -1
+
+    @maxHeight.setter
+    def maxHeight(self, value): pass
+
+    @property
+    def minHeight(self): return -1
+
+    @minHeight.setter
+    def minHeight(self, value): pass

@@ -7,10 +7,6 @@ from pyforms.Controls import ControlNumber
 from pyforms.Controls import ControlSlider
 from pyforms.Controls import ControlText
 from pyforms.Controls import ControlLabel
-from pysettings import conf
-
-if conf.PYFORMS_MODE=='GUI':
-	from AnyQt.QtWidgets import QColorDialog
 
 logger = logging.getLogger(__name__)
 
@@ -28,13 +24,12 @@ class GraphsProperties(BaseWidget):
 		# Definition of the forms fields
 		self._graphs_list = ControlList('Graphs list')
 		self._name        = ControlText('Name')
-		self._min_value   = ControlNumber('Min', default=0,  minimum=-sys.float_info.max, maximum=sys.float_info.max)
-		self._max_value   = ControlNumber('Max', default=0,  minimum=-sys.float_info.max, maximum=sys.float_info.max)
-		self._values_zoom = ControlSlider('Amplitude', default=100,  minimum=60, maximum=400)
-		self._values_top  = ControlNumber('Bottom', default=0,  minimum=-1000, maximum=1000)
+		self._min_value   = ControlNumber('Min', 0, -sys.float_info.max, sys.float_info.max)
+		self._max_value   = ControlNumber('Max', 0, -sys.float_info.max, sys.float_info.max)
+		self._values_zoom = ControlSlider('Amplitude', 100, 60, 400)
+		self._values_top  = ControlNumber('Bottom', 0, -1000, 1000)
 		self._remove_graph_btn = ControlButton('Remove graph')
 		self._value 	  = ControlLabel()
-		self._pickcolor   = ControlButton('Pick color', default=self.__pickcolor_evt)
 
 		self._graphs_list.readonly = True
 
@@ -46,7 +41,7 @@ class GraphsProperties(BaseWidget):
 					' ',
 					'_name',
 					('_min_value', '_max_value', ' '),
-					('_values_top', '_pickcolor'),
+					('_values_top', ' '),
 					'_values_zoom',
 					'info:Choose one graph and move the mouse over \nthe timeline to visualize the coordenates.',
 					'_value'
@@ -71,7 +66,6 @@ class GraphsProperties(BaseWidget):
 		self._values_zoom.enabled   = False
 		self._values_top.enabled    = False
 		self._remove_graph_btn.enabled = False
-		self._pickcolor.enabled 		= False
 
 		self._remove_graph_btn.value = self.__remove_chart
 
@@ -103,13 +97,6 @@ class GraphsProperties(BaseWidget):
 		super(GraphsProperties, self).show()
 		self._loaded = False
 
-	def __pickcolor_evt(self):
-		color = QColorDialog.getColor(
-			self._current_selected_graph._color, 
-			self, 'Pick a color for the graph')
-		self._current_selected_graph._color = color
-		self._timeline.repaint()
-			
 
 	def __remove_chart(self):
 		index = self._graphs_list.selected_row_index
@@ -123,7 +110,6 @@ class GraphsProperties(BaseWidget):
 			self._values_zoom.enabled   	= False
 			self._values_top.enabled    	= False
 			self._remove_graph_btn.enabled 	= False
-			self._pickcolor.enabled 		= False
 			self._timeline.repaint()
 			self._mainwindow -= index
 
@@ -157,7 +143,6 @@ class GraphsProperties(BaseWidget):
 			self._values_zoom.enabled   	= True
 			self._values_top.enabled    	= True
 			self._remove_graph_btn.enabled 	= True
-			self._pickcolor.enabled 		= True
 			self._current_selected_graph 	= graph
 
 		del self._updating_properties

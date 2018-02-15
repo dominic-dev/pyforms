@@ -20,10 +20,9 @@ __status__ = "Development"
 
 class ControlTextArea(ControlBase):
 
-	def __init__(self, *args, **kwargs):
-		ControlBase.__init__(self, *args, **kwargs)
+	def __init__(self, label='', default=None, helptext=None):
+		ControlBase.__init__(self, label, default, helptext)
 		self.autoscroll = False
-		
 		
 
 	def init_form(self):

@@ -15,18 +15,14 @@ from pyforms.gui.Controls.ControlBase import ControlBase
 
 
 class ControlSlider(ControlBase):
-
-	def __init__(self, *args, **kwargs):
+	def __init__(self, label="", default=0, min=0, max=100):
 		self._updateSlider = True
-		self._min = kwargs.get('minimum', 0)
-		self._max = kwargs.get('maximum', 100)
-		if 'default' not in kwargs: kwargs['default'] = 0
-		ControlBase.__init__(self, *args, **kwargs)
-		
-		self._form.value.setText(str(kwargs['default']))
-		self._form.horizontalSlider.valueChanged.connect(self.valueChanged)
+		self._min = min
+		self._max = max
 
-	
+		ControlBase.__init__(self, label, default)
+		self._form.value.setText(str(default))
+		self._form.horizontalSlider.valueChanged.connect(self.valueChanged)
 
 	def init_form(self):
 		control_path = tools.getFileInSameDirectory(__file__, "sliderInput.ui")
@@ -47,7 +43,7 @@ class ControlSlider(ControlBase):
 		if 'value' in data: self.value = int(data['value'])
 
 	def save_form(self, data, path=None):
-		data['value'] = self.value
+		if self.value: data['value'] = self.value
 
 	@property
 	def value(self):

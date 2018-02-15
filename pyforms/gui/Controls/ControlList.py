@@ -26,16 +26,15 @@ class ControlList(ControlBase, QWidget):
 
 	CELL_VALUE_BEFORE_CHANGE = None  # store value when cell is double clicked
 
-	def __init__(self, *args, **kwargs):
+	def __init__(self, label="", default="", add_function=None,
+	             remove_function=None):
 		QWidget.__init__(self)
 
-		self._plusFunction = kwargs.get('add_function', None)
-		self._minusFunction = kwargs.get('remove_function', None)
-		ControlBase.__init__(self, *args, **kwargs)
+		self._plusFunction = add_function
+		self._minusFunction = remove_function
+		ControlBase.__init__(self, label, default)
 
 		self.autoscroll = False
-
-		self.select_entire_row = kwargs.get('select_entire_row', False)
 		
 
 	##########################################################################
@@ -74,8 +73,6 @@ class ControlList(ControlBase, QWidget):
 			self.plusButton.pressed.connect(plusFunction)
 			self.minusButton.pressed.connect(minusFunction)
 
-		
-
 	def __repr__(self):
 		return "ControlList " + str(self._value)
 
@@ -104,7 +101,7 @@ class ControlList(ControlBase, QWidget):
 				for column in range(self.columns_count):
 					v = self.get_value(column, row)
 					if isinstance(v, BaseWidget):
-						columns.append(v.save_form({}, path))
+						columns.append(v.save({}))
 					else:
 						columns.append(str(v))
 				rows.append(columns)
@@ -118,7 +115,7 @@ class ControlList(ControlBase, QWidget):
 				for column in range(len(rows[row])):
 					v = self.get_value(column, row)
 					if isinstance(v, BaseWidget):
-						v.load_form(rows[row][column], path)
+						v.load(rows[row][column])
 					else:
 						self.set_value(column, row, rows[row][column])
 		elif 'value' in data.keys():
@@ -160,10 +157,6 @@ class ControlList(ControlBase, QWidget):
 			self.tableWidget.setCellWidget(row, column, value)
 			value.show()
 			self.tableWidget.setRowHeight(row, value.height())
-		elif isinstance(value, ControlBase):
-			self.tableWidget.setCellWidget(row, column, value.form)
-			value.show()
-			self.tableWidget.setRowHeight(row, value.form.height())
 		else:
 			args = [value] if not hasattr(value, 'icon') else [QIcon(value.icon), value]
 			item = QTableWidgetItem()

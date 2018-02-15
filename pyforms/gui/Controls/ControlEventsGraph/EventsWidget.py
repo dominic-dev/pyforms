@@ -53,7 +53,7 @@ class EventsWidget(QWidget):
 	#### HELPERS/FUNCTIONS ###################################################
 	##########################################################################
 
-	def clear(self):
+	def clean(self):
 		"""
 		Clean all events
 		"""
